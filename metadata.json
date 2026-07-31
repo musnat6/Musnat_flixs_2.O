@@ -1,0 +1,6 @@
+{
+  "name": "Munsatflixs",
+  "description": "A custom movie streaming interface prototype.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

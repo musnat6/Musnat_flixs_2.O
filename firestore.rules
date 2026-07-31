@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /watch_history/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+      // Allow create if the userId matches the authenticated user
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+  }
+}
