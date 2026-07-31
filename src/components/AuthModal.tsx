@@ -38,7 +38,21 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         onClose();
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed');
+      let msg = err.message || 'Authentication failed';
+      if (err.code === 'auth/unauthorized-domain') {
+        msg = 'This domain is not authorized in Firebase Console. Please add your domain to Firebase Authentication > Settings > Authorized Domains.';
+      } else if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+        msg = 'Invalid email or password. Please check your credentials and try again.';
+      } else if (err.code === 'auth/email-already-in-use') {
+        msg = 'An account with this email address already exists. Try signing in instead.';
+      } else if (err.code === 'auth/wrong-password') {
+        msg = 'Incorrect password. Try again or use "Forgot password?".';
+      } else if (err.code === 'auth/invalid-email') {
+        msg = 'Please enter a valid email address.';
+      } else if (err.code === 'auth/weak-password') {
+        msg = 'Password should be at least 6 characters long.';
+      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -51,7 +65,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       await signInWithGoogle();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Google sign in failed');
+      let msg = err.message || 'Google sign in failed';
+      if (err.code === 'auth/unauthorized-domain') {
+        msg = 'This domain (e.g., vercel.app) is not authorized in Firebase Console. Add it under Firebase Console > Authentication > Settings > Authorized Domains.';
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        msg = 'Sign-in popup was closed before completing.';
+      }
+      setError(msg);
     } finally {
       setLoading(false);
     }
